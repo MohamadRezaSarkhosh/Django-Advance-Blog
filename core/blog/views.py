@@ -1,7 +1,8 @@
 from django.shortcuts import render, get_object_or_404
 from django.views.generic.base import TemplateView, RedirectView
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, CreateView
 from blog.models import Post
+from blog.forms import PostForm
 
 
 
@@ -44,3 +45,10 @@ class PostList(ListView):
 
 class PostDetailView(DetailView):
     model = Post
+
+
+class PostCreateView(CreateView):
+    model = Post
+    form_class = PostForm
+    # fields = ['author', 'title', 'content', 'status', 'category', 'published_date']
+    success_url = '/blog/post/'
