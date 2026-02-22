@@ -5,7 +5,8 @@ app_name = 'blog'
 
 
 urlpatterns = [
-    path('cbv-view', views.IndexView.as_view(), name='cbv-view'),
+    # path('cbv-view', views.IndexView.as_view(), name='cbv-view'),
+    # path('go-to-maktabkhoone/<int:pk>', views.RedirectToMaktab.as_view(), name='redirect-to-maktabkhoone'),
     path('post/', views.PostList.as_view(), name='post-list'),
-    path('go-to-maktabkhoone/<int:pk>', views.RedirectToMaktab.as_view(), name='redirect-to-maktabkhoone')
+    path('post/<int:pk>', views.PostDetailView.as_view(), name='post-detail')
 ]
