@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.views.generic.base import TemplateView, RedirectView
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from blog.models import Post
 from blog.forms import PostForm
 
@@ -32,7 +32,7 @@ class RedirectToMaktab(RedirectView):
         return super().get_redirect_url(*args, **kwargs)
 
 
-class PostList(ListView):
+class PostList(LoginRequiredMixin, ListView):
     # model = Post
     queryset = Post.objects.all()
     context_object_name = 'posts'
@@ -44,11 +44,11 @@ class PostList(ListView):
     #     posts = Post.objects.filter(status=True)
     #     return posts
 
-class PostDetailView(DetailView):
+class PostDetailView(LoginRequiredMixin, DetailView):
     model = Post
 
 
-class PostCreateView(LoginRequiredMixin, CreateView):
+class PostCreateView(PermissionRequiredMixin, CreateView):
     model = Post
     form_class = PostForm
     # fields = ['author', 'title', 'content', 'status', 'category', 'published_date']
@@ -59,12 +59,13 @@ class PostCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
     
 
-class PostEditView(LoginRequiredMixin, UpdateView):
+class PostEditView(PermissionRequiredMixin, UpdateView):
+    permission_required = 'blog.change_post'
     model = Post
     form_class = PostForm
     success_url = '/blog/post/'
 
 
-class PostDeleteView(LoginRequiredMixin, DeleteView):
+class PostDeleteView(PermissionRequiredMixin, DeleteView):
     model = Post
     success_url = '/blog/post/'
